@@ -1,0 +1,45 @@
+import "canvas"
+import "math"
+import "stdsx"
+
+msg = ""
+NUM_POINTS = 0
+while (NUM_POINTS <= 2 || NUM_POINTS > 25) {
+  NUM_POINTS = 0 + prompt("How many polygons? (ex: 5)" + msg)
+  if (NUM_POINTS <= 2) msg = "!! It's said, well!"
+  else if (NUM_POINTS > 25) msg = " Чувак, " + NUM_POINTS + " it's going to be SOOO long!"
+}
+angle = 2*PI / NUM_POINTS;
+DIVIDER = 2.8
+
+
+w = 800 h = 600
+window("Fractal polygon demo on yimx", w, h)
+_fractal(w/2, h/2, w/2)
+repaint()
+
+def poly(cx, cy, xsize) {
+  ox = cx  oy = cy - xsize
+  
+  ang = 0
+  
+  for i = 0, i < NUM_POINTS, i++ {
+    ang += angle
+    nx = cx - sin(ang)*xsize  ny = cy - cos(ang)*xsize
+    line(ox, oy, nx, ny)
+    ox = nx  oy = ny
+  }
+}
+
+def _fractal(cx, cy, size) {
+  if size >= 3 {
+    s2 = size / 2
+    sD = size / DIVIDER
+    color(0, 0, 255 - size * 255 / w/2)
+    poly(cx, cy, sD)
+    _fractal(cx, cy - s2, sD)
+    for n = 0, n < NUM_POINTS, n++ {
+      _fractal(cx - sin(angle*n)*s2, cy - cos(angle*n)*s2, sD)
+    }
+  }
+}
